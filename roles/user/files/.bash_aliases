@@ -18,6 +18,11 @@ alias edit='vim'
 alias trash="mv --force -t ~/.local/share/Trash $1"
 alias rel='lsb_release -r'
 alias rel='lsb_release -a'
+alias tf='terraform'
+alias tfi='terraform init'
+alias tfw="terraform workspace list"
+alias tfws='terraform workspace select $@'
+
 alias ..='cd ..'
 password() {
     echo $@ | base64 | pbcopy
