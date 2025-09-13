@@ -1,0 +1,29 @@
+---
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^main|master$/
+      when: always
+    - if: $CI_COMMIT_BRANCH =~ /^dev(elop)?(ment)??$/
+      when: always
+    - if: $CI_COMMIT_BRANCH =~ /^localhost$/
+      when: always
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^dev(elop)?(ment)??$/
+      when: always
+
+stages:
+  - validate
+
+ansible-validate:
+  image: alpine:latest
+  stage: validate
+  before_script:
+    - apk add --no-cache ansible
+  script:
+    - ansible-playbook Main.yml --syntax-check
+    - ansible-playbook Main.yml --check
+  only:
+    refs:
+      - main
+      - dev
+      - localhost
+...

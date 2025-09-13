@@ -1,0 +1,7 @@
+.env
+vars/
+ssh-keys/
+.vscode/
+output/*
+.vault_pass.txt
+inventory

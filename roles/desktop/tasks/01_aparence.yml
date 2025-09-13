@@ -1,0 +1,47 @@
+---
+# - name: Aparence | Install psutil
+#   ansible.builtin.pip:
+#     name: psutil
+#   ignore_errors: true
+- name: Ensure fonts directory
+  ansible.builtin.file:
+    path: "~/.fonts"
+    state: directory
+    mode: "1664"
+  become: false
+- name: Aparence | Install fonts
+  ansible.builtin.unarchive:
+    src: https://github.com/microsoft/cascadia-code/releases/download/v2111.01/CascadiaCode-2111.01.zip
+    dest: "~/.fonts"
+    remote_src: true
+    keep_newer: true
+  # become: false
+  ignore_errors: true
+- name: Configure xbindkeys shortcut
+  ansible.builtin.copy:
+    dest: "~/.xbindkeysrc"
+    content: |
+      "x-terminal-emulator -e tmux -L system"
+          Mod4+grave
+    mode: '0644'
+  become: false
+- name: Ensure autostart directory exists
+  ansible.builtin.file:
+    path: "~/.config/autostart"
+    state: directory
+    mode: '0755'
+  become: false
+- name: Autostart xbindkeys on login
+  ansible.builtin.copy:
+    dest: "~/.config/autostart/xbindkeys.desktop"
+    content: |
+      [Desktop Entry]
+      Type=Application
+      Exec=xbindkeys
+      Hidden=false
+      X-GNOME-Autostart-enabled=true
+      Name=XBindKeys
+      Comment=Custom hotkeys
+    mode: '0644'
+  become: false
+...

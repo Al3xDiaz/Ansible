@@ -1,0 +1,27 @@
+---
+all:
+  localhost:
+    ansible_connection: local
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: user
+  vars:
+    ansible_ssh_pass: password
+    ansible_sudo_pass: password
+...
+# ---
+# all:
+#   children:
+#     localhost:
+#       hosts:
+#         192.168.1.101
+#       vars:
+#         ansible_user: al3xdiaz
+#         ansible_ssh_pass: password
+#         ansible_sudo_pass: password
+#         server_ssh_key_passphrasse: password
+#         server_gpg_passphrasse: 
+#         git_name: "al3xdiaz"
+#         git_email: "mail@alexdiaz.com"
+#   vars:
+#     ansible_python_interpreter: /usr/bin/python3
+# ...

@@ -1,0 +1,7 @@
+---
+- name: Clonar el repositorio de NVM
+  ansible.builtin.git:
+    repo: "https://github.com/nvm-sh/nvm.git"
+    dest: "~/.nvm"
+    version: "v0.39.7"
+...

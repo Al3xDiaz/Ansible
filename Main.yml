@@ -1,0 +1,15 @@
+---
+- name: Main | playbook
+  become: true
+  hosts: localhost
+  roles:
+    - role: basic
+      tags:
+        - basic
+    - role: user
+      tags:
+        - user
+    - role: desktop
+      tags:
+        - desktop
+...

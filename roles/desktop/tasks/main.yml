@@ -1,0 +1,6 @@
+---
+- name: Main | desktop utils tools Aparence
+  ansible.builtin.include_tasks: "01_aparence.yml"
+- name: Main | desktop utils tools applications
+  ansible.builtin.include_tasks: "02_applications.yml"
+

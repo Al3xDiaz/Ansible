@@ -1,0 +1,10 @@
+---
+- name: Main | initial_configuration
+  ansible.builtin.include_tasks: "01_packages.yml"
+- name: Main | config profile
+  ansible.builtin.include_tasks: "02_config_profile.yml"
+- name: Main | nvm
+  ansible.builtin.include_tasks: "03_nvm.yml"
+- name: Main | docker
+  ansible.builtin.include_tasks: "04_docker.yml"
+...

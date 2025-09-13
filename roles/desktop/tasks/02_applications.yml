@@ -1,0 +1,107 @@
+---
+- block:
+  - name: Install gitversion
+    ansible.builtin.unarchive:
+      src: https://github.com/GitTools/GitVersion/releases/download/5.12.0/gitversion-linux-x64-5.12.0.tar.gz
+      dest: /usr/local/bin/
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: "764"
+      remote_src: true
+    when:
+      - not ansible_check_mode
+  - name: Unarchive Postman
+    ansible.builtin.unarchive:
+      src: https://dl.pstmn.io/download/latest/linux64
+      dest: /opt/
+      remote_src: true
+      mode: "0755"
+    when:
+      - not ansible_check_mode
+
+  - name: Create symlink for Postman binary
+    ansible.builtin.file:
+      src: /opt/Postman/Postman
+      dest: /usr/local/bin/postman
+      state: link
+
+  - name: Ensure PATH for Postman (optional if symlink exists)
+    ansible.builtin.lineinfile:
+      path: ~/.bashrc
+      regexp: '^export.*Postman'
+      line: 'export PATH="$PATH:/opt/Postman"'
+      create: true
+      state: present
+  - name: Create desktop access icon
+    ansible.builtin.copy:
+      src: Postman.desktop
+      dest: /usr/share/applications/
+      owner: "root"
+      group: "root"
+      mode: u=rw,g=rw,o=r
+- block:
+  - name: Crear directorio para llaves si no existe
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+      mode: '0755'
+  - name: Descargar llaves GPG necesarias
+    ansible.builtin.get_url:
+      url: "{{ item.url }}"
+      dest: "/etc/apt/keyrings/{{ item.dest }}"
+      mode: '0644'
+    loop:
+      - { url: "https://packages.microsoft.com/keys/microsoft.asc", dest: "microsoft.gpg" }
+  - name: Agregar repositorios de terceros
+    ansible.builtin.apt_repository:
+      repo: "{{ item.repo }}"
+      filename: "{{ item.name }}"
+      state: present
+      update_cache: yes
+    loop:
+      - { name: "vscode", repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" }
+  - name: Agregar Flathub como remote
+    community.general.flatpak_remote:
+      name: flathub
+      state: present
+      flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  - name: Instalar Spotify vía Flatpak
+    community.general.flatpak:
+      name: com.spotify.Client
+      state: present
+      remote: flathub
+  - name: Create desktop access icon for Spotify
+    ansible.builtin.copy:
+      src: Spotify.desktop
+      dest: /usr/share/applications/
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Apt install de terceros
+    ansible.builtin.apt:
+      update_cache: true
+      cache_valid_time: 3600
+      force_apt_get: true
+      name:
+        - code
+        - code-insiders
+  - name: Install chrome
+    when:
+    - ansible_os_family == "Debian"
+    - not ansible_check_mode
+    ansible.builtin.apt:
+      deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - name: Install discord
+    when:
+      - ansible_os_family == "Debian"
+      - not ansible_check_mode
+    ansible.builtin.apt:
+      deb: https://discord.com/api/download?platform=linux&format=deb
+  - name: Install megasycn
+    when:
+      - ansible_os_family == "Debian"
+      - not ansible_check_mode
+    ansible.builtin.apt:
+      deb: https://mega.nz/linux/repo/Debian_11/amd64/megasync-Debian_11_amd64.deb
+  when:
+    - ansible_os_family == "Debian"
