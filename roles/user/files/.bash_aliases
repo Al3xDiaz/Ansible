@@ -29,7 +29,7 @@ password() {
     pbcopy -o
 }
 # git version
-alias gversion="[ -d .git/ ] && echo v`gitversion /nocache /nofetch /showvariable MajorMinorPatch || git tag | tail -1` || echo 'no version'"
+# alias gversion="[ -d .git/ ] && echo v`gitversion /nocache /nofetch /showvariable MajorMinorPatch || git tag | tail -1` || echo 'no version'"
 # git commands
 alias gsign="git config --global user.signinkey"
 gcommit() {
@@ -94,6 +94,8 @@ export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_SHOWUPSTREAM=auto
 
+
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -105,5 +107,3 @@ source ~/.bash-git/git-prompt.sh
 export PS1='┌──\u@\h:\w\n└─$ '
 export GIT_PS1_SHOWCOLORHINTS=true
 export PS1='┌──\[\e[32m\]\u@\h\[\e[m\]:\[\e[34m\]\w\[\e[m\]$(__git_ps1 " \[\e[33m\](%s)\[\e[m\]")\n└─\$ '
-
-
